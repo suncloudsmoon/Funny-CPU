@@ -19,6 +19,10 @@ void CPU::start() {
 
 	// Run BIOS
 	while (stackptr < mem_size) {
+		if (stackptr < 0) {
+			e = ErrorType::stack_pointer_out_of_bounds;
+			stackptr = 0;
+		}
 		Data opcode = read_mem_at(stackptr);
 		Data reg1 = read_mem_at(stackptr + 1);
 		Data reg_type = read_mem_at(stackptr + 2);

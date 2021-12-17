@@ -46,7 +46,8 @@ namespace RegType {
 
 namespace ErrorType {
 	enum ERROR_TYPE {
-		opcode_not_found = -1
+		opcode_not_found = -1,
+		stack_pointer_out_of_bounds = -2
 	};
 };
 
