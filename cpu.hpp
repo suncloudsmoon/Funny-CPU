@@ -12,7 +12,15 @@ namespace Opcode {
 		add = 1,
 		sub = 2,
 		div = 3,
-		mul = 4
+		mul = 4,
+
+		jmp = 5,
+		cmp = 6,
+		je = 7,
+		jl = 8,
+		jg = 9,
+		jle = 10,
+		jge = 11
 	};
 };
 
@@ -23,7 +31,9 @@ namespace Reg {
 		b = 2,
 		c = 3,
 		d = 4,
-		e = 5
+
+		x = 5,
+		e = 6
 	};
 };
 
@@ -56,11 +66,15 @@ protected:
 
 	Data& get_reg(Data reg2, Data reg3);
 	Data& get_cpu_reg(Data cpu_reg);
-	void execute_instruction(Data opcode, Data reg1, Data reg_type, Data reg2);
+	/*
+	* Returns true if the execute_instruction wants to jmp
+	*/
+	bool execute_instruction(Data opcode, Data reg1, Data reg_type, Data reg2);
 
 	Bus data_bus;
-	Data a, b, c, d;
-	Data e; // error reg
+	Data stackptr;
+	Data nop, a, b, c, d;
+	Data x, e; // error reg
 private:
 	Data treat_num_as_reg;
 };

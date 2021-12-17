@@ -6,7 +6,7 @@
 #include <iostream>
 #endif
 
-CPU::CPU(const Bus& bus) : data_bus(bus), a(0), b(0), c(0), d(0), e(0), treat_num_as_reg(0) {}
+CPU::CPU(const Bus& bus) : data_bus(bus), stackptr(0), nop(0), a(0), b(0), c(0), d(0), x(0), e(0), treat_num_as_reg(0) {}
 
 void CPU::start() {
 	Data mem_size = get_mem_size();
@@ -18,16 +18,14 @@ void CPU::start() {
 	}
 
 	// Run BIOS
-	Data stackptr = 0;
 	while (stackptr < mem_size) {
 		Data opcode = read_mem_at(stackptr);
 		Data reg1 = read_mem_at(stackptr + 1);
 		Data reg_type = read_mem_at(stackptr + 2);
 		Data reg2 = read_mem_at(stackptr + 3);
 
-		execute_instruction(opcode, reg1, reg_type, reg2);
-
-		stackptr += 4;
+		if (!execute_instruction(opcode, reg1, reg_type, reg2))
+			stackptr += 4;
 	}
 
 #ifndef NDEBUG
@@ -77,6 +75,8 @@ Data& CPU::get_reg(Data reg_type, Data d) {
 
 Data& CPU::get_cpu_reg(Data cpu_reg) {
 	switch (cpu_reg) {
+	case Reg::nop:
+		return nop;
 	case Reg::a:
 		return a;
 	case Reg::b:
@@ -85,6 +85,8 @@ Data& CPU::get_cpu_reg(Data cpu_reg) {
 		return c;
 	case Reg::d:
 		return d;
+	case Reg::x:
+		return x;
 	case Reg::e:
 		return e;
 	default:
@@ -92,7 +94,8 @@ Data& CPU::get_cpu_reg(Data cpu_reg) {
 	}
 }
 
-void CPU::execute_instruction(Data opcode, Data reg1, Data reg_type, Data reg2) {
+bool CPU::execute_instruction(Data opcode, Data reg1, Data reg_type, Data reg2) {
+	bool isjmp = false;
 	Data& first = get_cpu_reg(reg1);
 	Data& second = get_reg(reg_type, reg2);
 	switch (opcode) {
@@ -110,8 +113,46 @@ void CPU::execute_instruction(Data opcode, Data reg1, Data reg_type, Data reg2) 
 	case Opcode::mul:
 		first *= second;
 		break;
+	case Opcode::jmp:
+		stackptr = second;
+		isjmp = true;
+		break;
+	case Opcode::cmp:
+		x = first - second;
+		break;
+	case Opcode::je:
+		if (x == 0) {
+			stackptr = second;
+			isjmp = true;
+		}
+		break;
+	case Opcode::jl:
+		if (x < 0) {
+			stackptr = second;
+			isjmp = true;
+		}
+		break;
+	case Opcode::jg:
+		if (x > 0) {
+			stackptr = second;
+			isjmp = true;
+		}	
+		break;
+	case Opcode::jle:
+		if (x <= 0) {
+			stackptr = second;
+			isjmp = true;
+		}
+		break;
+	case Opcode::jge:
+		if (x >= 0) {
+			stackptr = second;
+			isjmp = true;
+		}
+		break;
 	default:
 		e = ErrorType::opcode_not_found;
 		break;
 	}
+	return isjmp;
 }

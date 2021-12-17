@@ -5,15 +5,26 @@
 #include <string>
 #include <vector>
 #include <queue>
+#include <cstddef>
 
 #include "cpu.hpp"
 
-const std::unordered_map<std::string, int> opcode_map{
+const std::unordered_map<std::string, int> basic_opcode_map{
 	{"nop", Opcode::nop},
 	{"add", Opcode::add},
 	{"sub", Opcode::sub},
 	{"div", Opcode::div},
-	{"mul", Opcode::mul}
+	{"mul", Opcode::mul},
+	{"cmp", Opcode::cmp},
+};
+
+const std::unordered_map<std::string, int> jump_opcode_map{
+	{"jmp", Opcode::jmp},
+	{"je", Opcode::je},
+	{"jl", Opcode::jl},
+	{"jg", Opcode::jg},
+	{"jle", Opcode::jle},
+	{"jge", Opcode::jge}
 };
 
 const std::unordered_map<std::string, int> reg_map{
@@ -21,6 +32,8 @@ const std::unordered_map<std::string, int> reg_map{
 	{"b", Reg::b},
 	{"c", Reg::c},
 	{"d", Reg::d},
+
+	{"x", Reg::x},
 	{"e", Reg::e}
 };
 
