@@ -1,6 +1,8 @@
-// Do something
 add a, 10
-add a, 10
-cmp a, 100
-jl 0, 1
 
+adder:
+add a, 10
+add a, 10
+
+cmp a, 100
+jl adder

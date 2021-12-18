@@ -17,7 +17,7 @@ int main() {
 }
 
 static void assembly_to_storage(const char *input_asm, const char *output_asm, const char *storage_file, UData storage_size) {
-	Assembler translator;
+	fa::Assembler translator;
 	translator.assemble(input_asm, output_asm);
 
 	storeutil::create_empty_storage_device(storage_file, HEX_SIZE, storage_size);
