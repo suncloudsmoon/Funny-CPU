@@ -1,7 +1,9 @@
-add a, 10
+add	a, 10
 
 adder:
-mov a, 100
+mov	a, 200
+mov	ioa, 100
+mov	iob, a
 
-cmp a, 100
-jl adder
+cmp	a, 100
+jl	adder

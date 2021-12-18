@@ -36,7 +36,11 @@ void CPU::start() {
 	}
 
 #ifndef NDEBUG
-	std::cout << "Registers [a,b,c,d,e]: " << a << ", " << b << ", " << c << ", " << d << ", " << e << std::endl;
+	std::cout << "---------------CPU Profile-----------------" << std::endl;
+	std::cout << "General-Purpose Registers [a,b,c,d]: " << a << ", " << b << ", " << c << ", " << d << std::endl;
+	std::cout << "IO Registers [ioa, iob, ioc, iod]: " << ioa << ", " << iob << ", " << ioc << ", " << iod << std::endl;
+	std::cout << "Special Registers [x, e]: " << x << ", " << e << std::endl;
+	std::cout << "-------------------------------------------" << std::endl;
 #endif
 }
 

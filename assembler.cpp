@@ -117,7 +117,7 @@ namespace fa {
 			reg2 = 0;
 		}
 		else {
-			display_asm_error("I am unable to figure out what " + instructions.front() + " is!");
+			display_asm_error("I am unable to figure out what the instruction \"" + instructions.front() + "\" is!");
 		}
 		// Adding stuff to num_list
 		num_list.push_back(opcode);
@@ -133,11 +133,16 @@ namespace fa {
 		std::size_t pos = 0, new_pos = 0;
 
 		// First String
-		if ((new_pos = line.find(" ")) == std::string::npos) {
-			display_asm_error("I am unable to parse assembly string: " + line);
+		if ((new_pos = line.find_first_not_of("abcdefghijklmnopqrstuvwxyz12345679")) == std::string::npos) {
+			display_asm_error("I am unable to parse opcode in \"" + line + "\"!");
 		}
 		split_list.push(line.substr(pos, new_pos - pos));
-		pos = new_pos + 1;
+
+		// Second String
+		if ((new_pos = line.find_first_not_of(" \n\t", new_pos + 1)) == std::string::npos) {
+			display_asm_error("I am unable to find anything beyond new lines or spaces in instruction: \"" + line + "\"!");
+		}
+		pos = new_pos;
 
 		if ((new_pos = line.find(",")) == std::string::npos) {
 			split_list.push(line.substr(pos));
@@ -147,9 +152,16 @@ namespace fa {
 			// Second String
 			split_list.push(line.substr(pos, new_pos - pos));
 
+			if ((new_pos = line.find_first_not_of(" \n\t", new_pos + 1)) == std::string::npos) {
+				display_asm_error("I am lost in new lines or tabs in the second argument - \"" + line + "\"!");
+			}
+
 			// Third String
-			pos = new_pos + 1;
-			split_list.push(line.substr(pos));
+			pos = new_pos;
+			if ((new_pos = line.find_last_of(R"( \n\t/)")) == std::string::npos) {
+				new_pos = line.size();
+			}
+			split_list.push(line.substr(pos, new_pos - pos));
 		}
 		return split_list;
 	}
