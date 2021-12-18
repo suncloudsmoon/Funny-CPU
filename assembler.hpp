@@ -18,6 +18,8 @@ namespace fa {
 		{"div", Opcode::div},
 		{"mul", Opcode::mul},
 		{"cmp", Opcode::cmp},
+
+		{"mov", Opcode::mov},
 	};
 
 	const std::unordered_map<std::string, int> jump_opcode_map{
@@ -29,11 +31,21 @@ namespace fa {
 		{"jge", Opcode::jge}
 	};
 
+	const std::unordered_map<std::string, int> io_opcode_map{
+		{"in", Opcode::in},
+		{"out", Opcode::out}
+	};
+
 	const std::unordered_map<std::string, int> reg_map{
 		{"a", Reg::a},
 		{"b", Reg::b},
 		{"c", Reg::c},
 		{"d", Reg::d},
+
+		{"ioa", Reg::ioa},
+		{"iob", Reg::iob},
+		{"ioc", Reg::ioc},
+		{"iod", Reg::iod},
 
 		{"x", Reg::x},
 		{"e", Reg::e}

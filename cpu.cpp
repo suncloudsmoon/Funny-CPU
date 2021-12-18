@@ -6,7 +6,10 @@
 #include <iostream>
 #endif
 
-CPU::CPU(const Bus& bus) : data_bus(bus), stackptr(0), nop(0), a(0), b(0), c(0), d(0), x(0), e(0), treat_num_as_reg(0) {}
+CPU::CPU(const Bus& bus) : data_bus(bus), stackptr(0),  
+							nop(0), a(0), b(0), c(0), d(0),
+							ioa(0), iob(0), ioc(0), iod(0),
+							x(0), e(0), treat_num_as_reg(0) {}
 
 void CPU::start() {
 	Data mem_size = get_mem_size();
@@ -89,6 +92,14 @@ Data& CPU::get_cpu_reg(Data cpu_reg) {
 		return c;
 	case Reg::d:
 		return d;
+	case Reg::ioa:
+		return ioa;
+	case Reg::iob:
+		return iob;
+	case Reg::ioc:
+		return ioc;
+	case Reg::iod:
+		return iod;
 	case Reg::x:
 		return x;
 	case Reg::e:
@@ -153,6 +164,15 @@ bool CPU::execute_instruction(Data opcode, Data reg1, Data reg_type, Data reg2) 
 			stackptr = second;
 			isjmp = true;
 		}
+		break;
+	case Opcode::mov:
+		first = second;
+		break;
+	case Opcode::in:
+		iod = data_bus.get(first);
+		break;
+	case Opcode::out:
+		data_bus.send(first, ioa, iob, ioc);
 		break;
 	default:
 		e = ErrorType::opcode_not_found;

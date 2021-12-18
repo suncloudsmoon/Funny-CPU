@@ -45,7 +45,7 @@ namespace fa {
 	}
 
 	void Assembler::display_asm_error(const std::string &error_message) {
-		std::cerr << error_message << std::endl;
+		std::cerr << "Computer: " << error_message << std::endl;
 		std::exit(-1);
 	}
 
@@ -53,7 +53,7 @@ namespace fa {
 		std::size_t colon_index = line.find(":");
 
 		if (colon_index == std::string::npos)
-			display_asm_error("Unable to find \':\' in the string \"" + line + "\"!");
+			display_asm_error("Computer: Unable to find \':\' in the string \"" + line + "\"!");
 
 		std::string case_label = line.substr(0, colon_index);
 		return std::pair<std::string, Data>(case_label, line_num);
@@ -102,6 +102,23 @@ namespace fa {
 			reg_type = RegType::num;
 			reg2 = line_num * 4;
 		}
+		else if (io_opcode_map.find(instructions.front()) != io_opcode_map.end()) {
+			opcode = io_opcode_map.at(instructions.front());
+			instructions.pop();
+
+			auto regnum = instructions.front();
+			if (reg_map.find(regnum) != reg_map.end()) {
+				reg1 = reg_map.at(regnum);
+			}
+			else {
+				display_asm_error("IN instruction shall only accept registers as input and \"" + regnum + "\" is not a register!");
+			}
+			reg_type = RegType::num;
+			reg2 = 0;
+		}
+		else {
+			display_asm_error("I am unable to figure out what " + instructions.front() + " is!");
+		}
 		// Adding stuff to num_list
 		num_list.push_back(opcode);
 		num_list.push_back(reg1);
@@ -117,7 +134,7 @@ namespace fa {
 
 		// First String
 		if ((new_pos = line.find(" ")) == std::string::npos) {
-			display_asm_error("Unable to parse assembly string: " + line);
+			display_asm_error("I am unable to parse assembly string: " + line);
 		}
 		split_list.push(line.substr(pos, new_pos - pos));
 		pos = new_pos + 1;

@@ -20,10 +20,17 @@ namespace Opcode {
 		jl = 8,
 		jg = 9,
 		jle = 10,
-		jge = 11
+		jge = 11,
+
+		mov = 12,
+		in = 13,
+		out = 14
 	};
 };
 
+/*
+* IO registers are "ioa", ...
+*/
 namespace Reg {
 	enum REGISTERS {
 		nop = 0,
@@ -31,6 +38,11 @@ namespace Reg {
 		b = 2,
 		c = 3,
 		d = 4,
+
+		ioa = 100,
+		iob = 101,
+		ioc = 102,
+		iod = 103,
 
 		x = 5,
 		e = 6
@@ -75,7 +87,8 @@ protected:
 	Bus data_bus;
 	Data stackptr;
 	Data nop, a, b, c, d;
-	Data x, e; // error reg
+	Data ioa, iob, ioc, iod; // iob,... are io registers
+	Data x, e; // e - error reg
 private:
 	Data treat_num_as_reg;
 };

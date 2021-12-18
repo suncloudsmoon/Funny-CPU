@@ -1,8 +1,7 @@
 add a, 10
 
 adder:
-add a, 10
-add a, 10
+mov a, 100
 
 cmp a, 100
 jl adder

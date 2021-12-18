@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cassert>
 
 #include "assembler.hpp"
 #include "storageutil.hpp"
@@ -8,12 +9,25 @@
 #include "memory.hpp"
 #include "storage.hpp"
 
+#ifndef NDEBUG
+#include <ctime>
+#endif
+
 static void assembly_to_storage(const char* input_asm, const char* output_asm, const char* storage_file, UData storage_size);
 static void start_cpu();
 
 int main() {
+#ifndef NDEBUG
+	auto start = std::clock();
+#endif
+
 	assembly_to_storage("bios.fa", "bios.fhex", "storage.fst", 512);
 	start_cpu();
+
+#ifndef NDEBUG
+	auto end = std::clock();
+	std::cout << "Time elapsed: " << ((double) end - start) / CLOCKS_PER_SEC << " seconds!" << std::endl;
+#endif
 }
 
 static void assembly_to_storage(const char *input_asm, const char *output_asm, const char *storage_file, UData storage_size) {
